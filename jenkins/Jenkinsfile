@@ -1,0 +1,20 @@
+pipeline {
+  agent any
+
+  environment {
+    VAULT_ADDR  = "http://127.0.0.1:8200"
+    VAULT_TOKEN = credentials('vault-token')
+  }
+
+  stages {
+    stage('Fetch Secret') {
+      steps {
+        bat '''
+        curl -s ^
+        -H "X-Vault-Token: %VAULT_TOKEN%" ^
+        %VAULT_ADDR%/v1/kv/data/app
+        '''
+      }
+    }
+  }
+}
